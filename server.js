@@ -1,21 +1,21 @@
-require('dontenv').config; // Load environment variables from .env file.
+require('dotenv').config(); // Load environment variables from .env file.
 const express = require('express');
 const cors = require('cors'); //Enable cors midleware for cross-origin request
 const nodemailer = require('nodemailer');
 
-const app = express;
-const port = process.env.PORT || 3000;
+const app = express();
+const port = process.env.PORT || 3001;
 const corsOptions=
 {
-    origin: '*' //Allow requests from all domain. specify actual domain from production for security.  
-    OptionsSuccessStatus: 200,
+    origin: '*', //Allow requests from all domain. specify actual domain from production for security.  
+    optionsSuccessStatus : 200,
 
 };
 
 
 //Use JSon parsing and cors with cors option as global middleware
 app.use(express.json())
-app.use(cors(corsOption));
+app.use(cors(corsOptions));
 
 
 //Create a reusabe trasporter using smtp
@@ -24,13 +24,13 @@ const transporter= nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.SMTP_User,
-    pass: process.env.SMTP_Pass
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
 });
 
 //Email sending Endpoints
-app.Post('/send-email' , async(req, res)=>{
+app.post('/send-email' , async(req, res)=>{
 
     try{
       const { name, subject, email, message } = req.body; //Destructure and request data from req body
@@ -65,8 +65,8 @@ app.Post('/send-email' , async(req, res)=>{
 
 });
 
-app.listen(PORT, ()=>
+app.listen(port, ()=>
 {
-console.log('server is running on the port ${port}');
+console.log(`server is running on the port ${port}`);
 } );
 
